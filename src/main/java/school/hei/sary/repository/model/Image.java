@@ -10,8 +10,6 @@ import school.hei.sary.PojaGenerated;
 @Entity
 @Getter
 @Setter
-
 public class Image {
-    @Id
-    private String id;
+  @Id private String id;
 }
