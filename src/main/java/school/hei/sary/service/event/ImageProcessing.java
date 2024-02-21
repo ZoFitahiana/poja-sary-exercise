@@ -24,31 +24,16 @@ public class ImageProcessing {
 
   public void imageProcessing(MultipartFile multipartFile, String bucketKey) {
     try {
-      // convert MultipartFile to File
       File file = convertMultipartFileToFile(multipartFile);
-
-      // load the original image from the file
       BufferedImage originalImage = ImageIO.read(file);
-
-      // convert image to black and white
       BufferedImage newImage = ConvertImage.BlackCouleur(originalImage);
-
-      // create a temporary file for the new image
       File newImageFile = createTempFile(newImage);
-
-      // upload the original image file to S3
       bucketComponent.upload(file, bucketKey);
-
-      // upload the new black and white image file to S3
       bucketComponent.upload(newImageFile, bucketKey + "_bw");
-
-      // save id image in the database
       String id = bucketKey + "_bw";
       Image imageEntity = new Image();
       imageEntity.setId(id);
       imageRepository.save(imageEntity);
-
-      // delete the temporary file
       newImageFile.delete();
     } catch (IOException e) {
       e.printStackTrace();
@@ -62,12 +47,8 @@ public class ImageProcessing {
   }
 
   private File createTempFile(BufferedImage image) throws IOException {
-    // create a temporary file
     File tempFile = File.createTempFile("temp_image", ".png");
-
-    // write the BufferedImage to the temporary file
     ImageIO.write(image, "png", tempFile);
-
     return tempFile;
   }
 }
